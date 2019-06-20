@@ -8,4 +8,6 @@ Setting up:
 - nginx
 - php7.2
 - mysql
+- bind9
+- connect to dnsmanager
 - ssl
