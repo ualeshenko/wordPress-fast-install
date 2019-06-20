@@ -1,13 +1,17 @@
-# wordpress-fast-install
-WordPress Fast Install
+# Wordpress Installer
 
-Working only with Ubuntu
+Minimum requirements:
+- OS: Ubuntu
+- RAM: 1 Mb
+- CPU: 1
 
-Setting up:
+The script performs the installation and setting :
 - apache2
 - nginx
 - php7.2
 - mysql
+- postfix
+- ufw firewall
 - bind9
 - connect to dnsmanager
-- ssl
+- ssl (certbot)
