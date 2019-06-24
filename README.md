@@ -1,5 +1,4 @@
-# wordpress-fast-install
-WordPress Fast Install
+# WordPress Fast Install
 
   The script allows you to customize the working environment for installation, WordPress settings.
 
