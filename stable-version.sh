@@ -124,35 +124,7 @@ gzip_nginx () {
 
 setting_nginx_ssl () {
     info "Setting up nginx"
-echo "server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-    server_name _;
-    return 301 https://\$host\$request_uri;
-}
-
-server {
-    listen              443 ssl;
-    server_name         "${environment[domain]}";
-    ssl_certificate      /etc/letsencrypt/live/"${environment[domain]}"/fullchain.pem;
-    ssl_certificate_key  /etc/letsencrypt/live/"${environment[domain]}"/privkey.pem;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 10m;
-    ssl_protocols TLSv1.2;
-    ssl_prefer_server_ciphers on;
-    ssl_ciphers "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384";
-
-    client_max_body_size 32M;
-
-    location /.well-known {
-        root /var/www/html;
-    }
-
-    location / {
-       proxy_pass http://localhost:8080;
-       include /etc/nginx/proxy_params;
-    }
-}" > /etc/nginx/sites-available/"${environment[domain]}"
+    cat configs/nginx_ssl.conf | sed -e s/\"\$domain\"/${environment[domain]}/g > /etc/nginx/sites-available/"${environment[domain]}"
     info "Nginx configured"
 }
 
@@ -169,16 +141,7 @@ setting_nginx () {
     info "Setting up nginx without SSL"
     apt install -y nginx
     rm /etc/nginx/sites-enabled/default
-echo "server {
-    listen 80;
-    server_name localhost;
-
-    location / {
-       proxy_pass http://localhost:8080;
-       include /etc/nginx/proxy_params;
-    }
-}" > /etc/nginx/sites-available/"${environment[domain]}"
-
+    cp ./configs/nginx.conf /etc/nginx/sites-available/"${environment[domain]}"
     ln -s /etc/nginx/sites-available/"${environment[domain]}" /etc/nginx/sites-enabled/"${environment[domain]}"
     info "Nginx configured without SSL"
 }
@@ -441,4 +404,4 @@ for i in ${keys[@]} ; do
     fi
 done
 
-#main
+main
