@@ -1,0 +1,14 @@
+base_domain="${environment[domain]}"
+path_bind_db="/etc/bind/${environment[domain]}.db"
+dnsmgr_updata="/root/dnsmgr/dnsmgrupdate"
+bind_option="/etc/bind/named.conf.options"
+dkim_priv_key="/etc/ssl/private/dkimprivate.key"
+dkim_pub_key="/etc/ssl/private/dkimpublic.key"
+path_php="/etc/php/7.3/apache2/php.ini"
+path_to_php_ini="/etc/php/7.3/fpm/php.ini"
+path_wp_config="/var/www/"${environment[domain]}"/wp-config.php"
+database_name=$( echo "${environment[domain]}" | sed "s/\.//g" )
+admin_wp="admin"
+password_user_db=$( date +%s | sha256sum | base64 | head -c 32 ; echo )
+password_mysql=$( openssl rand -base64 16 )
+

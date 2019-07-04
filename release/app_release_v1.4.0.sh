@@ -29,8 +29,7 @@ info () {
 
 write_secret_data () {
     info "Writed secret data to file"
-    mkdir ./.secret
-    secret_data=".secret/access.txt"
+    secret_data="./secret_data.txt"
     echo "Mysql root password === $password_mysql
 Admin Wordpress User=${admin_wp} 
 Password Admin WP = ${admin_wp_password}" >> "$secret_data"
@@ -381,8 +380,8 @@ connect_dnsmanager () {
 
     echo -e "NAMEDPATH=`dirname ${path_bind_db}`
 MASTERIP=${environment[ip]}
-DNSMGRURL=https://${domain1_dnsmgr}/manager/dnsmgr?out=text&authinfo=${user_dnsmgr}:${environment[pass_dnsmgr]}
-DNSMGRURL=https://${domain2_dnsmgr}/manager/dnsmgr?out=text&authinfo=${user_dnsmgr}:${environment[pass_dnsmgr]}
+DNSMGRURL=https://${environment[domain1_dnsmgr]}/manager/dnsmgr?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
+DNSMGRURL=https://${environment[domain2_dnsmgr]}/manager/dnsmgr?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
 CHANGESONLY=yes
 CHECKMASTER=yes" >> "${dnsmgr_updata}.conf"
 
@@ -430,6 +429,10 @@ environment=( [domain]=localhost
               [ip]="${ip:=127.0.0.1}"
               [locale]=ru_RU
               [wp-password]=$admin_wp_password
+	      [user_dnsmgr]=user
+	      [pass_dnsmgr]=password
+              [domain1_dnsmgr]=example1.com
+	      [domain2_dnsmgr]=example2.com
 )
 
 for i in ${keys[@]} ; do
@@ -450,8 +453,24 @@ if [ "$ip" == "$a_record" ] ; then
 fi
 
 ###System environment
-source './env/dnsmanager'
-source './env/base_env'
+#base_domain=$( echo "${environment[domain]}" | grep -o "[a-z]*\.*[a-z]*$" )
+base_domain="${environment[domain]}"
+ip_domain1_dnsmgr=74.119.194.67
+ip_domain2_dnsmgr=185.12.92.10
+ns1_domain=ns51.ruweb.net.
+ns2_domain=ns52.ruweb.net.
+path_bind_db="/etc/bind/${environment[domain]}.db"
+dnsmgr_updata="/root/dnsmgr/dnsmgrupdate"
+bind_option="/etc/bind/named.conf.options"
+dkim_priv_key="/etc/ssl/private/dkimprivate.key"
+dkim_pub_key="/etc/ssl/private/dkimpublic.key"
+path_php="/etc/php/7.3/apache2/php.ini"
+path_to_php_ini="/etc/php/7.3/fpm/php.ini"
+path_wp_config="/var/www/"${environment[domain]}"/wp-config.php"
+database_name=$( echo "${environment[domain]}" | sed "s/\.//g" )
+admin_wp="admin"
+password_user_db=$( date +%s | sha256sum | base64 | head -c 32 ; echo )
+password_mysql=$( openssl rand -base64 16 )
 ####################
 
 for i in ${keys[@]} ; do

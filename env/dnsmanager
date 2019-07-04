@@ -1,0 +1,9 @@
+user_dnsmgr=user
+pass_dnsmgr=password
+domain1_dnsmgr=example1.com
+domain2_dnsmgr=example2.com
+ip_domain1_dnsmgr=74.119.194.67
+ip_domain2_dnsmgr=185.12.92.10
+ns1_domain=ns51.ruweb.net.
+ns2_domain=ns52.ruweb.net.
+
