@@ -200,23 +200,9 @@ install_php_fpm () {
 }
 
 setting_apache_fpm () {
-    echo "<VirtualHost *:8080>
-        ServerName localhost
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/"${environment[domain]}"
+    cat configs/apache.conf | sed -e s/\"\$domain\"/${environment[domain]}/g > /etc/apache2/sites-available/"${environment[domain]}".conf
 
-        ErrorLog \${APACHE_LOG_DIR}/"${environment[domain]}".log
-        CustomLog \${APACHE_LOG_DIR}/"${environment[domain]}".log combined
-
-        <Directory /var/www/>
-            Options Indexes FollowSymLinks
-            AllowOverride All
-            Require all granted
-        </Directory>
-</VirtualHost>
-" > /etc/apache2/sites-available/"${environment[domain]}".conf
-
-        a2enmod actions ; a2enmod rewrite
+    a2enmod actions ; a2enmod rewrite
 
     echo "<IfModule mod_fastcgi.c>
 AddHandler fastcgi-script .fcgi
@@ -239,15 +225,9 @@ install_mod_rpaf () {
     make && make install
 
     echo LoadModule rpaf_module /usr/lib/apache2/modules/mod_rpaf.so > /etc/apache2/mods-available/rpaf.load
-echo "<IfModule mod_rpaf.c>
-RPAF_Enable             On
-RPAF_Header             "${environment[ip]}"
-RPAF_ProxyIPs           "${environment[ip]}"
-RPAF_SetHostName        On
-RPAF_SetHTTPS           On
-RPAF_SetPort            On
-</IfModule>" > /etc/apache2/mods-available/rpaf.conf
-     info "Mod_rpaf configured"
+
+    cat configs/mod_rpaf.conf | sed -e s/\"\$ip\"/${environment[ip]}/g  > /etc/apache2/mods-available/rpaf.conf
+    info "Mod_rpaf configured"
 
 }
 
@@ -461,4 +441,4 @@ for i in ${keys[@]} ; do
     fi
 done
 
-main
+#main
