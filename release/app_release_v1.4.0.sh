@@ -380,8 +380,8 @@ connect_dnsmanager () {
 
     echo -e "NAMEDPATH=`dirname ${path_bind_db}`
 MASTERIP=${environment[ip]}
-DNSMGRURL=https://${environment[domain1_dnsmgr]}/manager/dnsmgr?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
-DNSMGRURL=https://${environment[domain2_dnsmgr]}/manager/dnsmgr?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
+DNSMGRURL=${environment[domain1_dnsmgr]}?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
+DNSMGRURL=${environment[domain2_dnsmgr]}?out=text&authinfo=${environment[user_dnsmgr]}:${environment[pass_dnsmgr]}
 CHANGESONLY=yes
 CHECKMASTER=yes" >> "${dnsmgr_updata}.conf"
 
